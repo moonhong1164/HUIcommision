@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>후이 타로 커미션</title>
+  <style>
+    :root {
+      /* 연파랑 테마 */
+      --bg-top: #eff6ff;
+      --bg-middle: #e0f2fe;
+      --bg-bottom: #f0f9ff;
+
+      --card: #ffffff;
+      --card-soft: #f5f7ff;
+
+      --accent: #0ea5e9; /* 연하늘 포인트 */
+      --accent-soft: rgba(14, 165, 233, 0.14);
+
+      --text: #0f172a;
+      --muted: #64748b;
+
+      --border: rgba(148, 163, 184, 0.7);
+
+      --radius-lg: 18px;
+      --radius-xl: 26px;
+      --shadow-soft: 0 18px 40px rgba(148, 163, 184, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Pretendard",
+        "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, #dbeafe 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #e0f2fe 0, transparent 55%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-middle), var(--bg-bottom));
+      color: var(--text);
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* 배경 반짝이 */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background-image:
+        radial-gradient(2px 2px at 10% 20%, rgba(191, 219, 254, 0.8) 0, transparent 50%),
+        radial-gradient(1.5px 1.5px at 80% 30%, rgba(125, 211, 252, 0.9) 0, transparent 50%),
+        radial-gradient(1.5px 1.5px at 30% 80%, rgba(186, 230, 253, 0.85) 0, transparent 50%),
+        radial-gradient(2px 2px at 60% 60%, rgba(226, 232, 240, 0.75) 0, transparent 55%);
+      opacity: 0.65;
+      animation: twinkle 11s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.35; transform: translateY(0px); }
+      50% { opacity: 0.9; transform: translateY(-3px); }
+      100% { opacity: 0.55; transform: translateY(2px); }
+    }
+
+    /* 헤더 */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(239, 246, 255, 0.94);
+      border-bottom: 1px solid rgba(191, 219, 254, 0.9);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .logo {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo span {
+      font-size: 1.3rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      opacity: 0.9;
+      padding: 6px 10px;
+      border-radius: 999px;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+      background-color: rgba(219, 234, 254, 0.9);
+      color: var(--text);
+    }
+
+    .nav-cta {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: linear-gradient(
+        135deg,
+        rgba(14, 165, 233, 0.22),
+        rgba(59, 130, 246, 0.18)
+      );
+      font-size: 0.85rem;
+      display: none;
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(125, 211, 252, 0.65);
+    }
+
+    /* 섹션 공통 */
+
+    section {
+      padding: 70px 0;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      margin-bottom: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* Hero */
+
+    .hero {
+      padding: 72px 0 60px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: 2.2rem;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9, #1d4ed8);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
+      color: var(--muted);
+      font-size: 0.96rem;
+      margin-bottom: 22px;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      font-size: 0.78rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.85);
+      background-color: rgba(255, 255, 255, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #38bdf8, #0ea5e9);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .btn-primary {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-size: 0.93rem;
+      background: linear-gradient(135deg, var(--accent), #38bdf8);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 36px rgba(37, 99, 235, 0.6);
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 8px 15px;
+      font-size: 0.86rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(191, 219, 254, 0.9);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background-color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(219, 234, 254, 0.9);
+      border-color: rgba(59, 130, 246, 0.9);
+    }
+
+    .hero-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      opacity: 0.9;
+    }
+
+    .hero-card {
+      border-radius: var(--radius-xl);
+      padding: 18px 16px;
+      background: radial-gradient(circle at top, #e0f2fe, #eff6ff 80%);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(191, 219, 254, 0.95);
+      position: relative;
+      overflow: hidden;
+      animation: floatCard 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatCard {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-5px); }
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0, rgba(56, 189, 248, 0.18), transparent),
+        radial-gradient(circle at 90% 100%, rgba(59, 130, 246, 0.16), transparent);
+      opacity: 0.9;
+      z-index: -1;
+    }
+
+    .hero-card-title {
+      font-size: 0.93rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+    }
+
+    .hero-card-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mini-card {
+      border-radius: 14px;
+      padding: 9px;
+      background-color: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(191, 219, 254, 0.95);
+      font-size: 0.78rem;
+    }
+
+    .mini-card-title {
+      font-weight: 600;
+      margin-bottom: 3px;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .mini-card-text {
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding-top: 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.9);
+      margin-top: 4px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* 소개 섹션 */
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+    }
+
+    .about-card {
+      background-color: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .about-tag {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .about-name {
+      font-size: 1.15rem;
+      margin-bottom: 4px;
+    }
+
+    .about-note {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .about-list {
+      font-size: 0.84rem;
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .about-list li {
+      margin-bottom: 6px;
+    }
+
+    .about-highlight {
+      font-size: 0.83rem;
+      margin-top: 10px;
+      padding: 9px;
+      border-radius: 12px;
+      background-color: var(--card-soft);
+      border: 1px dashed rgba(56, 189, 248, 0.7);
+    }
+
+    /* 가격 */
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .price-card {
+      background-color: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 16px 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease,
+        border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(148, 163, 184, 0.5);
+      border-color: rgba(56, 189, 248, 0.9);
+      background-color: #e0f2fe;
+    }
+
+    .price-badge {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background-color: var(--accent-soft);
+      border: 1px solid rgba(37, 99, 235, 0.9);
+      color: var(--text);
+    }
+
+    .price-title {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .price-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 9px;
+      min-height: 40px;
+    }
+
+    .price-value {
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #075985;
+    }
+
+    .price-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .price-small {
+      font-size: 0.7rem;
+      color: var(--muted);
+      opacity: 0.95;
+    }
+
+    .price-hover {
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-top: 7px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.8);
+      padding-top: 5px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transform: translateY(4px);
+      transition: opacity 0.22s ease, max-height 0.22s ease,
+        transform 0.22s ease;
+    }
+
+    .price-card:hover .price-hover {
+      opacity: 1;
+      max-height: 80px;
+      transform: translateY(0);
+    }
+
+    /* 종류 */
+
+    .types-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+      font-size: 0.82rem;
+    }
+
+    .type-card {
+      background-color: var(--card-soft);
+      border-radius: 14px;
+      padding: 10px 10px 11px;
+      border: 1px solid rgba(191, 219, 254, 0.9);
+    }
+
+    .type-title {
+      font-size: 0.86rem;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .type-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* 프로세스 */
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      font-size: 0.82rem;
+    }
+
+    .step-card {
+      background-color: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 13px 12px;
+      border: 1px solid var(--border);
+    }
+
+    .step-number {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid rgba(56, 189, 248, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      margin-bottom: 5px;
+    }
+
+    .step-title {
+      font-size: 0.88rem;
+      margin-bottom: 3px;
+    }
+
+    .step-text {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* 신청 카드 / 공통 카드 */
+
+    .request-card {
+      background: radial-gradient(circle at top, rgba(191, 219, 254, 0.45),
+        rgba(255, 255, 255, 0.96));
+      border-radius: var(--radius-xl);
+      padding: 20px 18px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+    }
+
+    .request-title {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .request-text {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .request-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 9px;
+    }
+
+    .request-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .link-chip {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background-color: #ffffff;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.18s ease, transform 0.18s ease,
+        box-shadow 0.18s ease;
+      color: var(--text);
+    }
+
+    .link-chip:hover {
+      background-color: #dbeafe;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(148, 163, 184, 0.45);
+    }
+
+    /* 푸터 */
+
+    footer {
+      padding: 26px 0 38px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(191, 219, 254, 0.9);
+      background: linear-gradient(to top, rgba(219, 234, 254, 0.9), transparent);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* 반응형 */
+
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 64px;
+        padding-bottom: 52px;
+      }
+
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .types-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      section {
+        padding: 56px 0;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-cta {
+        display: inline-flex;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .types-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .types-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: 1.85rem;
+      }
+
+      .hero {
+        padding-top: 52px;
+        padding-bottom: 46px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <!-- 헤더 -->
+  <header>
+    <div class="container nav">
+      <div class="logo">
+        <span>🐻</span> 후이 타로
+      </div>
+      <nav class="nav-links">
+        <a href="#about">소개</a>
+        <a href="#pricing">요금</a>
+        <a href="#type">종류</a>
+        <a href="#request">신청</a>
+      </nav>
+      <button class="nav-cta" onclick="goToRequest()">신청하기</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="container hero-inner">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span> Hui Tarot Commission
+          </div>
+          <h1 class="hero-title">
+            <span>후이 타로</span><br />
+            조용히 마음을 듣는, 잔잔한 리딩
+          </h1>
+          <p class="hero-text">
+            후이 타로는, 오늘의 마음과 앞으로의 작은 변화를 함께 살펴보는 리딩입니다.<br />
+            연애와 인간관계, 일상 고민, 스스로를 돌보고 싶은 마음까지<br />
+            <strong>편안한 대화 + 카드의 흐름</strong>으로 차분히 풀어 드립니다.
+          </p>
+
+          <div class="hero-badges">
+            <div class="badge">💙 연애 · 관계의 마음</div>
+            <div class="badge">🌤️ 일상 · 감정 정리</div>
+            <div class="badge">🕊️ 자기 돌봄 · 힐링</div>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="goToRequest()">
+              🐻 문의하기
+            </button>
+            <button class="btn-secondary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">
+              요금 먼저 보기
+            </button>
+          </div>
+          <div class="hero-note">
+            * 진행 방식 : 카카오톡 채팅 / 텍스트 리딩<br />
+            * 예약 가능 시간과 자세한 옵션은 신청 후 순서대로 안내드립니다.
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <div class="hero-card-title">
+            오늘의 후이 포인트 🐻
+          </div>
+          <div class="hero-card-sub">
+            실제 커미션에서는 카드 사진과 함께, 당신 마음에 맞춘 해석이 전달됩니다.
+          </div>
+
+          <div class="hero-grid">
+            <div class="mini-card">
+              <div class="mini-card-title">연애 · 관계</div>
+              <div class="mini-card-text">
+                현재 거리감, 상대의 분위기, 앞으로의 흐름을<br />
+                부드럽게 짚어 보며 마음을 정리합니다.
+              </div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-title">나의 감정</div>
+              <div class="mini-card-text">
+                요즘 내가 왜 이렇게 힘든지, 지친 마음의 이유와<br />
+                스스로를 돌보는 방향을 함께 확인해요.
+              </div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-title">일상 고민</div>
+              <div class="mini-card-text">
+                관계, 진로, 공부, 생활 속 작은 선택들까지<br />
+                지금 나에게 어울리는 흐름을 봅니다.
+              </div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-title">사용 카드</div>
+              <div class="mini-card-text">
+                라이더웨이트 계열 덱과 감성·파스텔 톤 덱을 사용해<br />
+                분위기에 맞는 카드로 리딩합니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-meta">
+            <span>상태 : <strong>커미션 OPEN</strong></span>
+            <span>진행 인원 : 일별 선착순 · 문의 필수</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 소개 -->
+    <section id="about">
+      <div class="container">
+        <h2>리더 소개</h2>
+        <p class="section-subtitle">
+          조용히 이야기를 들어 주고, 부드럽게 함께 정리해 나가는 리더 후이입니다.
+        </p>
+
+        <div class="about-layout">
+          <div class="about-card">
+            <div class="about-tag">Hui Tarot Reader</div>
+            <div class="about-name">후이</div>
+            <div class="about-note">
+              “내가 너무 예민한 걸까?” “이 관계, 계속 괜찮을까?”<br />
+              마음 한쪽에 걸려 있는 고민들을, <strong>카드와 대화</strong>로 천천히 풀어 드립니다.
+            </div>
+            <ul class="about-list">
+              <li>진행 방식 : 텍스트 리딩 + 카드 사진</li>
+              <li>주요 주제 : 연애, 관계, 감정, 일상 고민</li>
+              <li>사용 언어 : 한국어</li>
+            </ul>
+            <div class="about-highlight">
+              💬 리딩 스타일<br />
+              · 판단보다는 “지금의 마음”을 중심에 두고 리딩합니다.<br />
+              · 불안만 키우는 말은 지양하고, 현실적인 선택지를 함께 봅니다.
+            </div>
+          </div>
+
+          <div class="about-card">
+            <div class="about-tag">진행 안내</div>
+            <ul class="about-list">
+              <li>진행 채널 : 카카오톡 오픈채팅</li>
+              <li>결과 전달 : 카드 사진 + 정리된 텍스트</li>
+              <li>추가 질문 : 같은 리딩 내 짧은 보충 질문 1회 가능</li>
+              <li>예약 : 아래 양식 복사 후 오픈채팅으로 전송</li>
+            </ul>
+            <div class="about-highlight">
+              ☁️ 이런 분께 특히 추천해요<br />
+              · 요즘 관계/연애 때문에 마음이 복잡한 분<br />
+              · 내 마음이 어떤 상태인지, 왜 힘든지 알고 싶은 분<br />
+              · 오늘을 조금 덜 무겁게 보내고 싶은 분
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 가격 -->
+    <section id="pricing">
+      <div class="container">
+        <h2>커미션 요금</h2>
+        <p class="section-subtitle">
+          시간제 상담과 1질문 리딩으로 진행됩니다.
+        </p>
+
+        <div class="cards-grid">
+          <!-- 15분 -->
+          <div class="price-card">
+            <div class="price-badge">15 min</div>
+            <div class="price-title">15분 채팅 상담</div>
+            <div class="price-desc">
+              짧은 고민 1~2개를 가볍게 정리하고 싶을 때 선택하는 기본 옵션입니다.
+            </div>
+            <div class="price-value">10,000원</div>
+            <div class="price-meta">
+              · 채팅 상담 약 15분<br />
+              · 핵심 카드 중심 간단 해석
+            </div>
+            <div class="price-small">
+              *짧은 연애/관계 고민, 오늘의 감정 정리 등에 적합
+            </div>
+            <div class="price-hover">
+              예) “요즘 이 관계, 제가 어떻게 하는 게 좋을까요?”,<br />
+              “오늘 있었던 일에 대해 제 마음이 너무 복잡해요.”
+            </div>
+          </div>
+
+          <!-- 20분 -->
+          <div class="price-card">
+            <div class="price-badge">20 min</div>
+            <div class="price-title">20분 채팅 상담</div>
+            <div class="price-desc">
+              상황·상대 마음·앞으로의 흐름까지 조금 더 여유 있게 보고 싶은 분께 추천드립니다.
+            </div>
+            <div class="price-value">15,000원</div>
+            <div class="price-meta">
+              · 채팅 상담 약 20분<br />
+              · 카드 여러 장 사용
+            </div>
+            <div class="price-small">
+              *연애/관계 흐름, 감정 변화, 일상 고민 전반에 적합
+            </div>
+            <div class="price-hover">
+              예) “최근 다툼 이후 이 관계의 흐름이 어떻게 될까요?”,<br />
+              “제 감정과 상대 마음을 같이 보고 싶어요.”
+            </div>
+          </div>
+
+          <!-- 30분 -->
+          <div class="price-card">
+            <div class="price-badge">30 min</div>
+            <div class="price-title">30분 채팅 상담</div>
+            <div class="price-desc">
+              여러 고민이 겹쳐 있거나, 장기적인 흐름까지 보고 싶은 분을 위한 심층 리딩입니다.
+            </div>
+            <div class="price-value">20,000원</div>
+            <div class="price-meta">
+              · 채팅 상담 약 30분<br />
+              · 복수 스프레드 활용 가능
+            </div>
+            <div class="price-small">
+              *관계·감정·진로·일상 등이 함께 얽힌 고민에 추천
+            </div>
+            <div class="price-hover">
+              예) “앞으로 몇 달간 이 관계와 제 마음 흐름을 길게 보고 싶어요.”
+            </div>
+          </div>
+
+          <!-- 1질문 -->
+          <div class="price-card">
+            <div class="price-badge">Q&A</div>
+            <div class="price-title">1질문 리딩</div>
+            <div class="price-desc">
+              한 가지 상황에 집중해서 방향만 빠르게 보고 싶을 때 선택합니다.
+            </div>
+            <div class="price-value">한 질문당 5,000원</div>
+            <div class="price-meta">
+              · 명확한 한 문장 질문 1개<br />
+              · 카드 사진 + 짧은 텍스트
+            </div>
+            <div class="price-small">
+              *결정 직전, 마지막으로 흐름만 확인하고 싶을 때 좋아요.
+            </div>
+            <div class="price-hover">
+              예) “이 말을 지금 꺼내는 게 좋을까요?”,<br />
+              “이 관계를 여기서 멈추는 게 나을까요?”
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 타로 종류 -->
+    <section id="type">
+      <div class="container">
+        <h2>타로 리딩 종류</h2>
+        <p class="section-subtitle">
+          고민의 종류에 따라, 아래 중 한 가지 또는 두 가지를 묶어서 리딩할 수 있습니다.
+        </p>
+
+        <div class="types-grid">
+          <div class="type-card">
+            <div class="type-title">💙 연애 · 관계</div>
+            <div class="type-text">
+              썸/연애/이별 후 감정, 친구·가족·동료와의 관계 등<br />
+              사람과 사람 사이의 거리감을 함께 살펴봅니다.
+            </div>
+          </div>
+          <div class="type-card">
+            <div class="type-title">🌧️ 요즘 내 마음 상태</div>
+            <div class="type-text">
+              이유 없이 무기력하거나 예민해질 때,<br />
+              지금 내 마음이 어떤 상태인지 알아보고 싶을 때 사용해요.
+            </div>
+          </div>
+          <div class="type-card">
+            <div class="type-title">🌤️ 일상 · 진로 고민</div>
+            <div class="type-text">
+              학교/일/생활 패턴, 앞으로의 방향 등<br />
+              가벼운 진로·일상 고민을 부드럽게 정리합니다.
+            </div>
+          </div>
+          <div class="type-card">
+            <div class="type-title">🕊️ 자기 돌봄 · 힐링</div>
+            <div class="type-text">
+              나 자신을 더 아껴주고 싶을 때,<br />
+              회복과 쉼에 대한 메시지를 받고 싶을 때 추천해요.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 진행 방식 -->
+    <section id="process">
+      <div class="container">
+        <h2>진행 방식</h2>
+        <p class="section-subtitle">
+          신청부터 결과를 받아보기까지, 후이 타로의 기본 흐름입니다.
+        </p>
+
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-title">신청 양식 전송</div>
+            <div class="step-text">
+              아래 양식을 복사해 오픈채팅에 보내 주세요.<br />
+              (닉네임, 주제, 질문 등)
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-title">옵션 · 금액 안내</div>
+            <div class="step-text">
+              가능한 시간과 리딩 옵션, 금액을<br />
+              현재 상황에 맞게 조정하여 안내드립니다.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-title">입금 확인 · 리딩 진행</div>
+            <div class="step-text">
+              입금 확인 후, 카드를 펼치고<br />
+              차분하게 텍스트로 정리합니다.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-title">결과 전달 · Q&A</div>
+            <div class="step-text">
+              카드 사진과 해석 전달 후,<br />
+              같은 주제 내 짧은 추가 질문 1회까지 가능해요.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 신청 섹션 -->
+    <section id="request">
+      <div class="container">
+        <div class="request-card">
+          <div class="request-title">후이 타로 신청하기</div>
+          <div class="request-text">
+            아래 양식을 복사해 오픈채팅으로 보내 주시면,<br />
+            가능한 일정과 리딩 형태, 금액을 순서대로 안내드릴게요.
+          </div>
+
+          <div class="about-card" style="margin:14px auto 12px; max-width:520px;">
+            <div class="about-tag">예약 양식</div>
+            <ul class="about-list">
+              <li>① 이름(또는 닉네임) :</li>
+              <li>② 리딩 주제 (연애/관계/감정/일상/기타) :</li>
+              <li>③ 리딩 형태 (1질문 / 15분 / 20분 / 30분 중 택1) :</li>
+              <li>④ 현재 상황 + 알고 싶은 점 :</li>
+              <li>⑤ 희망 전달 기한 (급한 경우 별도 표기) :</li>
+            </ul>
+            <p class="about-highlight" style="margin-top:10px;">
+              질문이 잘 정리가 안 되셔도 괜찮아요.<br />
+              “이 상황을 어떻게 물어야 할지 모르겠어요”라고 보내주시면,<br />
+              함께 질문부터 정리해 드립니다.
+            </p>
+          </div>
+
+          <button class="btn-primary" onclick="goToMainRequest()">
+            🐻 카카오톡 열기
+          </button>
+
+          <div class="request-links">
+            <a
+              class="link-chip"
+              href="https://open.kakao.com/o/s5dE1MZh"
+              target="_blank"
+              rel="noopener"
+            >
+              💬 후이 타로 카카오톡 오픈채팅
+            </a>
+          </div>
+
+          <div class="request-note">
+            * 답장은 최대한 빠르게 드리지만, 야간·새벽 시간에는 조금 늦어질 수 있습니다.<br />
+            * 심리 상담·의료 상담을 대체하지 않으며, 중요한 결정은 언제나 스스로의 안전을 우선해주세요.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 푸터 -->
+  <footer>
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> 후이 타로. All rights reserved.</div>
+      <div>Made with 🐻 & 💙</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function goToRequest() {
+      document.getElementById("request").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function goToMainRequest() {
+      window.open("https://open.kakao.com/o/s5dE1MZh", "_blank");
+    }
+  </script>
+</body>
+</html>
